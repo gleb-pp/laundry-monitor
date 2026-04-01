@@ -1,0 +1,44 @@
+name: Quality Gates
+
+on:
+    pull_request: 
+        branches: [ main ]
+jobs:
+    validate:
+        name: Code quality & test
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout code base
+              uses: actions/checkout@v4
+            
+            - name: Set up Python Enviroment
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.12"
+            - name: Install poetry
+              run: |
+                curl -sSL https://install.python-poetry.org | python3 -
+            
+            - name: Install dependencies
+              run: poetry install --with dev --no-root
+
+            - name: Dependency violation
+              run: poetry check 
+            
+            - name: Run Flake8
+              run: poetry run flake8 src/ --max-complexity=7
+              
+            - name: Run Bandit (security)
+              run: poetry run bandit -r src/ -ll
+
+            - name: Report Complexity (Radon)
+              run: poetry run radon cc . -nc --show-complexity --total-average  
+
+            - name: Report Maintability Index
+              run: poetry run radon mi src/
+              
+            - name: Check Complexity (Xenon) # same as Radon, but can fail pipeline
+              run: poetry run xenon --max-absolute B --max-modules A --max-average A .
+            
+            - name: Run tests
+              run: poetry run pytest --cov=src --cov-report=term-missing --cov-fail-under=70

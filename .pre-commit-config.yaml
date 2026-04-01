@@ -1,0 +1,16 @@
+repos:
+- repo: local
+  hooks:
+    - id: flake8
+      name: Flake8 (Style Conformance)
+      entry: poetry run flake8 src/ tests/
+      language: system
+      pass_filenames: false
+      types: [python]
+
+    - id: bandit
+      name: Bandit (High-severity vulnerabilities)
+      entry: poetry run bandit -r src/ -ll
+      language: system
+      pass_filenames: false
+      types: [python]

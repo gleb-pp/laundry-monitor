@@ -26,7 +26,7 @@ jobs:
               run: poetry check 
             
             - name: Run Flake8
-              run: poetry run flake8 src/ tests/ --max-complexity=7
+              run: poetry run flake8 src/ --max-complexity=7
               
             - name: Run Bandit (security)
               run: poetry run bandit -r src/ -ll

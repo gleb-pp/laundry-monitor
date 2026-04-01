@@ -3,6 +3,8 @@ name: Quality Gates
 on:
     pull_request: 
         branches: [ main ]
+    push:
+        branches: [ qa ]
 jobs:
     validate:
         name: Code quality & test

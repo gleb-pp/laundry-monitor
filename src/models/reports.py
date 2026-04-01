@@ -17,7 +17,11 @@ class Report(Base):
 
     __tablename__ = "reports"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True
+    )
     machine_id: Mapped[int] = mapped_column(
         ForeignKey("machines.id", ondelete="CASCADE"), nullable=False
     )

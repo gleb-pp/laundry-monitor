@@ -12,6 +12,7 @@ from service import MachineService
 
 router = APIRouter()
 
+
 @router.post("/report")
 async def send_report(
     db: Annotated[Session, Depends(get_db)],
@@ -25,6 +26,7 @@ async def send_report(
     db.commit()
     return Success()
 
+
 @router.get("/machines")
 async def get_machines(
     db: Annotated[Session, Depends(get_db)]
@@ -32,6 +34,7 @@ async def get_machines(
     """Get a list of all laundry machines."""
     service = MachineService(db)
     return service.get_machines_with_reports()
+
 
 @router.get("/machines/{id}/history")
 async def get_machine_history(

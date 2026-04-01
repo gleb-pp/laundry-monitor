@@ -23,8 +23,8 @@ jobs:
               run: poetry install --with dev --no-root
 
             - name: Dependency violation
-              run: poetry check 
-            
+              run: poetry check
+
             - name: Run Flake8
               run: poetry run flake8 src/ --max-complexity=7
               

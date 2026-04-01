@@ -45,4 +45,7 @@ async def get_machine_history(
     """Get the history of a specific laundry machine."""
     service = MachineService(db)
     reports = service.get_machine_reports(id, limit)
-    return [ReportSchema.model_validate(report) for report in reports]
+    return [
+        ReportSchema.model_validate(report, from_attributes=True)
+        for report in reports
+    ]

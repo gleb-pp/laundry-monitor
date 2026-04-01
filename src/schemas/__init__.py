@@ -1,7 +1,7 @@
 from .success import Success
 from .report import ReportSchema
 from .machines import (
-    MachineSchema, 
+    MachineSchema,
     MachineType,
     MachineResponseStatus,
     MachineReportStatus,

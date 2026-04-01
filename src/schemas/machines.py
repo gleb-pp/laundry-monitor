@@ -6,13 +6,13 @@ class MachineType(Enum):
     """Type of laundry machine."""
     WASHING = "washing"
     DRYING = "drying"
-    
+
     def __str__(self):
         return self.value
 
 
 class MachineResponseStatus(Enum):
-    """Status of a machine as determined by the system based on user reports."""
+    """Status of a machine as determined by the system."""
     FREE = "free"
     PROBABLY_FREE = "probably_free"
     BUSY = "busy"
@@ -30,6 +30,7 @@ class MachineReportStatus(Enum):
 
     def __str__(self):
         return self.value
+
 
 class MachineSchema(BaseModel):
     """Schema for representing a laundry machine with its current status."""

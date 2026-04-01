@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 import routers.machines
 from get_db import create_tables, create_initial_machines
 
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     """Create database tables on application startup."""

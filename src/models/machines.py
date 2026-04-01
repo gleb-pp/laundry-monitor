@@ -15,7 +15,11 @@ class Machine(Base):
 
     __tablename__ = "machines"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True
+    )
     dormitory: Mapped[int] = mapped_column(Integer, nullable=False)
     name: Mapped[str] = mapped_column(Text, nullable=False)
     type: Mapped[MachineType] = mapped_column(
@@ -26,6 +30,7 @@ class Machine(Base):
 
     __table_args__ = (
         CheckConstraint(
-            f"dormitory BETWEEN {dorm_settings.MIN_INDEX} AND {dorm_settings.MAX_INDEX}"
+            f"dormitory BETWEEN {dorm_settings.MIN_INDEX} "
+            f"AND {dorm_settings.MAX_INDEX}"
         ),
     )

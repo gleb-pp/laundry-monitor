@@ -1,0 +1,19 @@
+[project]
+name = "laundry-monitor"
+version = "0.1.0"
+description = "A simple web application for managing the washing machines in the univerysity laundry room."
+authors = [
+    {name = "Gleb Popov",email = "g.popov@innopolis.university"},
+    {name = "Aziz Vundirov",email = "a.vundirov@innopolis.university"},
+    {name = "Elizaveta Zagurskih",email = "e.zagurskih@innopolis.university"},
+    {name = "Aleksey Antipov",email = "a.antipov@innopolis.university"},
+]
+readme = "README.md"
+requires-python = ">=3.12,<4"
+dependencies = [
+    "sqlalchemy (>=2.0.48,<3.0.0)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

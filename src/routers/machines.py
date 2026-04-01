@@ -47,5 +47,5 @@ async def get_machine_history(
     reports = service.get_machine_reports(id, limit)
     return [
         ReportSchema.model_validate(report, from_attributes=True)
-        for report in report
+        for report in reports
     ]

@@ -6,7 +6,7 @@ from models import Base, Machine
 from schemas import MachineType
 
 engine = create_engine(
-    database_settings.url,
+    database_settings.URL,
     connect_args={"check_same_thread": False},
     echo=True
 )

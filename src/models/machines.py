@@ -5,8 +5,9 @@ from sqlalchemy import (
     CheckConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column
-from src.models.base import Base
-from src.settings import dorm_settings
+from models.base import Base
+from settings import dorm_settings
+from schemas.machines import MachineType
 
 
 class Machine(Base):
@@ -17,10 +18,10 @@ class Machine(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     dormitory: Mapped[int] = mapped_column(Integer, nullable=False)
     name: Mapped[str] = mapped_column(Text, nullable=False)
-    type: Mapped[str] = mapped_column(
-        Enum("washing", "drying", name="machine_type"),
+    type: Mapped[MachineType] = mapped_column(
+        Enum(MachineType, name="machine_type"),
         nullable=False,
-        default="washing"
+        default=MachineType.WASHING
     )
 
     __table_args__ = (

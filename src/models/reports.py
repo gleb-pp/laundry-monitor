@@ -7,8 +7,9 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.orm import Mapped, mapped_column
+from schemas.machines import MachineReportStatus
 
-from src.models.base import Base
+from models.base import Base
 
 
 class Report(Base):
@@ -18,14 +19,16 @@ class Report(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     machine_id: Mapped[int] = mapped_column(
-        ForeignKey("courses.course_id", ondelete="CASCADE"), nullable=False
+        ForeignKey("machines.id", ondelete="CASCADE"), nullable=False
     )
-    status: Mapped[str] = mapped_column(
-        Enum("free", "busy", "unavailable", name="machine_status"),
+    status: Mapped[MachineReportStatus] = mapped_column(
+        Enum(MachineReportStatus, name="machine_report_status"),
         nullable=False,
-        default="free"
+        default=MachineReportStatus.FREE
     )
     timestamp: Mapped[datetime] = mapped_column(
-        DateTime, nullable=True, default=datetime.now(tz=UTC),
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(UTC),
     )
     time_remaining: Mapped[int] = mapped_column(Integer, nullable=True)

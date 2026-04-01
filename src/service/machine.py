@@ -6,17 +6,33 @@ from schemas import (
 )
 from datetime import datetime, timedelta, UTC
 
+
 class MachineService:
     """Service class for handling laundry machine operations."""
 
     def __init__(self, db):
         self.db = db
 
-    def get_machine_reports(self, machine_id: int, limit: int = 10) -> list[Report]:
+    def get_machine_reports(
+        self,
+        machine_id: int,
+        limit: int = 10
+    ) -> list[Report]:
         """Get the history of a specific laundry machine."""
-        return self.db.query(Report).filter(Report.machine_id == machine_id).order_by(Report.timestamp.desc()).limit(limit).all()  
-    
-    def send_report(self, machine_id: int, status: MachineReportStatus, time_remaining: int | None = None) -> Report:
+        return (
+            self.db.query(Report)
+            .filter(Report.machine_id == machine_id)
+            .order_by(Report.timestamp.desc())
+            .limit(limit)
+            .all()
+        )
+
+    def send_report(
+        self,
+        machine_id: int,
+        status: MachineReportStatus,
+        time_remaining: int | None = None
+    ) -> Report:
         """Send a report about the status of a laundry machine."""
         report = Report(
             machine_id=machine_id,
@@ -26,9 +42,9 @@ class MachineService:
         self.db.add(report)
         self.db.flush()
         return report
-    
+
     def _get_machine_status(self, machine: Machine) -> MachineResponseStatus:
-        """Determine the current status of a machine based on its latest report."""
+        """Determine the current status of a machine."""
 
         machine_reports = self.get_machine_reports(machine.id, limit=1)
         if not machine_reports:
@@ -41,11 +57,17 @@ class MachineService:
             return MachineResponseStatus.FREE
 
         if latest_report.time_remaining is None:
-            if datetime.now(tz=UTC) < latest_report.timestamp.replace(tzinfo=UTC) + timedelta(hours=4):
+            deadline = (
+                latest_report.timestamp.replace(tzinfo=UTC) +
+                timedelta(hours=4)
+            )
+            if (datetime.now(tz=UTC) < deadline):
                 return MachineResponseStatus.BUSY
             else:
                 return MachineResponseStatus.PROBABLY_FREE
-        elif datetime.now(tz=UTC) < latest_report.timestamp.replace(tzinfo=UTC) + timedelta(minutes=latest_report.time_remaining):
+        elif (datetime.now(tz=UTC) <
+              latest_report.timestamp.replace(tzinfo=UTC) +
+              timedelta(minutes=latest_report.time_remaining)):
             return MachineResponseStatus.BUSY
         else:
             return MachineResponseStatus.FREE
@@ -62,5 +84,5 @@ class MachineService:
                 name=mach.name,
                 type=mach.type,
                 status=status
-            )) 
+            ))
         return machines_with_reports

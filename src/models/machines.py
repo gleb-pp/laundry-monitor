@@ -26,6 +26,6 @@ class Machine(Base):
 
     __table_args__ = (
         CheckConstraint(
-            f"dormitory BETWEEN {dorm_settings.min_dorm_number} AND {dorm_settings.max_dorm_number}"
+            f"dormitory BETWEEN {dorm_settings.MIN_INDEX} AND {dorm_settings.MAX_INDEX}"
         ),
     )

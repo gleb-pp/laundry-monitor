@@ -5,7 +5,6 @@ from schemas import (
     MachineReportStatus,
     ReportSchema,
 )
-from models import Machine
 from get_db import get_db
 from typing import Annotated
 from sqlalchemy.orm import Session

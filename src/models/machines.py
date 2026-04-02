@@ -1,13 +1,14 @@
 from sqlalchemy import (
+    CheckConstraint,
     Enum,
     Integer,
     Text,
-    CheckConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column
-from models.base import Base
-from settings import dorm_settings
-from schemas.machines import MachineType
+
+from src.models.base import Base
+from src.schemas.machines import MachineType
+from src.settings import dorm_settings
 
 
 class Machine(Base):
@@ -18,19 +19,19 @@ class Machine(Base):
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
-        autoincrement=True
+        autoincrement=True,
     )
     dormitory: Mapped[int] = mapped_column(Integer, nullable=False)
     name: Mapped[str] = mapped_column(Text, nullable=False)
     type: Mapped[MachineType] = mapped_column(
         Enum(MachineType, name="machine_type"),
         nullable=False,
-        default=MachineType.WASHING
+        default=MachineType.WASHING,
     )
 
     __table_args__ = (
         CheckConstraint(
             f"dormitory BETWEEN {dorm_settings.MIN_INDEX} "
-            f"AND {dorm_settings.MAX_INDEX}"
+            f"AND {dorm_settings.MAX_INDEX}",
         ),
     )

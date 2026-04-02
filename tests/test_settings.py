@@ -1,14 +1,18 @@
-from settings.db import DatabaseSettings
-from settings.dorm import DormSettings
+import pytest
+
+from src.settings.db import DatabaseSettings
+from src.settings.dorm import DormSettings
 
 
-def test_database_settings_reads_env(monkeypatch):
+def test_database_settings_reads_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test that DatabaseSettings correctly reads the database URL from the environment."""
     monkeypatch.setenv("DB_URL", "sqlite:///test.db")
     settings = DatabaseSettings()
     assert settings.URL == "sqlite:///test.db"
 
 
-def test_dorm_settings_reads_env(monkeypatch):
+def test_dorm_settings_reads_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test that DormSettings correctly reads the dormitory index range."""
     monkeypatch.setenv("DORM_MIN_INDEX", "2")
     monkeypatch.setenv("DORM_MAX_INDEX", "9")
     settings = DormSettings()

@@ -1,22 +1,26 @@
-from models import Report, Machine
-from schemas import (
+from datetime import UTC, datetime, timedelta
+
+from sqlalchemy.orm import Session
+
+from src.models import Machine, Report
+from src.schemas import (
     MachineReportStatus,
     MachineResponseStatus,
-    MachineSchema
+    MachineSchema,
 )
-from datetime import datetime, timedelta, UTC
+from src.settings import machine_settings
 
 
 class MachineService:
     """Service class for handling laundry machine operations."""
 
-    def __init__(self, db):
+    def __init__(self, db: Session) -> None:
         self.db = db
 
     def get_machine_reports(
         self,
         machine_id: int,
-        limit: int = 10
+        limit: int = 10,
     ) -> list[Report]:
         """Get the history of a specific laundry machine."""
         return (
@@ -31,13 +35,13 @@ class MachineService:
         self,
         machine_id: int,
         status: MachineReportStatus,
-        time_remaining: int | None = None
+        time_remaining: int | None = None,
     ) -> Report:
         """Send a report about the status of a laundry machine."""
         report = Report(
             machine_id=machine_id,
             status=status,
-            time_remaining=time_remaining
+            time_remaining=time_remaining,
         )
         self.db.add(report)
         self.db.flush()
@@ -45,7 +49,6 @@ class MachineService:
 
     def _get_machine_status(self, machine: Machine) -> MachineResponseStatus:
         """Determine the current status of a machine."""
-
         machine_reports = self.get_machine_reports(machine.id, limit=1)
         if not machine_reports:
             return MachineResponseStatus.FREE
@@ -59,18 +62,18 @@ class MachineService:
         if latest_report.time_remaining is None:
             deadline = (
                 latest_report.timestamp.replace(tzinfo=UTC) +
-                timedelta(hours=4)
+                timedelta(hours=machine_settings.HOURS_TO_FINISH)
             )
-            if (datetime.now(tz=UTC) < deadline):
+            if datetime.now(tz=UTC) < deadline:
                 return MachineResponseStatus.BUSY
-            else:
-                return MachineResponseStatus.PROBABLY_FREE
-        elif (datetime.now(tz=UTC) <
-              latest_report.timestamp.replace(tzinfo=UTC) +
-              timedelta(minutes=latest_report.time_remaining)):
+            return MachineResponseStatus.PROBABLY_FREE
+        deadline = (
+            latest_report.timestamp.replace(tzinfo=UTC) +
+            timedelta(minutes=latest_report.time_remaining)
+        )
+        if datetime.now(tz=UTC) < deadline:
             return MachineResponseStatus.BUSY
-        else:
-            return MachineResponseStatus.FREE
+        return MachineResponseStatus.FREE
 
     def get_machines_with_reports(self) -> list[MachineSchema]:
         """Get a list of all laundry machines with their latest report."""
@@ -83,6 +86,6 @@ class MachineService:
                 dormitory=mach.dormitory,
                 name=mach.name,
                 type=mach.type,
-                status=status
+                status=status,
             ))
         return machines_with_reports

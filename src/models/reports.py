@@ -7,9 +7,9 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.orm import Mapped, mapped_column
-from schemas.machines import MachineReportStatus
+from src.schemas.machines import MachineReportStatus
 
-from models.base import Base
+from src.models.base import Base
 
 
 class Report(Base):

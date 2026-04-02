@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from schemas.machines import MachineReportStatus
+from src.schemas.machines import MachineReportStatus
 
 
 class ReportSchema(BaseModel):

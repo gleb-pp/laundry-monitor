@@ -5,9 +5,9 @@ from sqlalchemy import (
     CheckConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column
-from models.base import Base
-from settings import dorm_settings
-from schemas.machines import MachineType
+from src.models.base import Base
+from src.settings import dorm_settings
+from src.schemas.machines import MachineType
 
 
 class Machine(Base):

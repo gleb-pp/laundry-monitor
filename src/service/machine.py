@@ -1,5 +1,5 @@
-from models import Report, Machine
-from schemas import (
+from src.models import Report, Machine
+from src.schemas import (
     MachineReportStatus,
     MachineResponseStatus,
     MachineSchema

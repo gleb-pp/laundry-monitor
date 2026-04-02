@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends
-from schemas import (
+from src.schemas import (
     Success,
     MachineSchema,
     MachineReportStatus,
     ReportSchema,
 )
-from get_db import get_db
+from src.get_db import get_db
 from typing import Annotated
 from sqlalchemy.orm import Session
-from service import MachineService
+from src.service import MachineService
 
 router = APIRouter()
 

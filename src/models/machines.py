@@ -6,9 +6,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.models.base import Base
-from src.schemas.machines import MachineType
-from src.settings import dorm_settings
+from models.base import Base
+from schemas.machines import MachineType
+from settings import dorm_settings
 
 
 class Machine(Base):

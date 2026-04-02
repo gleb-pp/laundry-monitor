@@ -2,13 +2,13 @@ from datetime import UTC, datetime, timedelta
 
 from sqlalchemy.orm import Session
 
-from src.models import Machine, Report
-from src.schemas import (
+from models import Machine, Report
+from schemas import (
     MachineReportStatus,
     MachineResponseStatus,
     MachineSchema,
 )
-from src.settings import machine_settings
+from settings import machine_settings
 
 
 class MachineService:

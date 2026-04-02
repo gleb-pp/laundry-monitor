@@ -3,8 +3,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-import src.routers.machines
-from src.get_db import create_initial_machines, create_tables
+import routers.machines
+from get_db import create_initial_machines, create_tables
 
 
 @asynccontextmanager
@@ -21,4 +21,4 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.include_router(src.routers.machines.router)
+app.include_router(routers.machines.router)

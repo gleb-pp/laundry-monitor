@@ -3,14 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from src.get_db import get_db
-from src.schemas import (
+from get_db import get_db
+from schemas import (
     MachineReportStatus,
     MachineSchema,
     ReportSchema,
     Success,
 )
-from src.service import MachineService
+from service import MachineService
 
 router = APIRouter()
 

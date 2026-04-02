@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from src.schemas.machines import MachineReportStatus
+from schemas.machines import MachineReportStatus
 
 
 class ReportSchema(BaseModel):

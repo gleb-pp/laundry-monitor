@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine, inspect
 
-from src.models.base import Base
-from src.models.machines import Machine
-from src.models.reports import Report
-from src.schemas.machines import MachineType, MachineReportStatus
+from models.base import Base
+from models.machines import Machine
+from models.reports import Report
+from schemas.machines import MachineType, MachineReportStatus
 
 
 def test_machine_table_name():

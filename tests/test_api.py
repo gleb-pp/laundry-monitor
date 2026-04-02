@@ -71,3 +71,20 @@ def test_history_limit_parameter_works(client):
     assert response.status_code == 200
     body = response.json()
     assert len(body) == 1
+
+def test_history_limit_parameter_returns_latest_report(client):
+    client.post("/report", params={"machine_id": 1, "status": "free"})
+    client.post(
+        "/report",
+        params={"machine_id": 1, "status": "busy", "time_remaining": 10},
+    )
+
+    response = client.get("/machines/1/history", params={"limit": 1})
+
+    assert response.status_code == 200
+    body = response.json()
+
+    assert len(body) == 1
+    assert body[0]["machine_id"] == 1
+    assert body[0]["status"] == "busy"
+    assert body[0]["time_remaining"] == 10

@@ -1,9 +1,14 @@
 from datetime import UTC, datetime, timedelta
 
-from src.models.machines import Machine
-from src.models.reports import Report
-from src.schemas.machines import MachineReportStatus, MachineResponseStatus
-from src.service.machine import MachineService
+from models.machines import Machine
+from models.reports import Report
+from schemas.machines import (
+    MachineReportStatus,
+    MachineResponseStatus,
+    MachineSchema,
+    MachineType,
+)
+from service.machine import MachineService
 
 
 def _machine_status(service: MachineService, machine_id: int):
@@ -260,3 +265,48 @@ def test_get_machine_reports_uses_default_limit_10(db_session):
     reports = service.get_machine_reports(machine.id)
 
     assert len(reports) == 10
+
+def test_machine_service_stores_db(db_session):
+    service = MachineService(db_session)
+    assert service.db is db_session
+
+def test_get_machines_with_reports_returns_complete_schema(db_session):
+    service = MachineService(db_session)
+
+    machines = service.get_machines_with_reports()
+
+    assert len(machines) == 4
+
+    washer_1 = next(m for m in machines if m.id == 1)
+    assert isinstance(washer_1, MachineSchema)
+    assert washer_1.dormitory == 1
+    assert washer_1.name == "Washer 1"
+    assert washer_1.type == MachineType.WASHING
+    assert washer_1.status == MachineResponseStatus.FREE
+
+
+def test_get_machines_with_reports_applies_status_per_machine(db_session):
+    service = MachineService(db_session)
+
+    db_session.add_all([
+        Report(
+            machine_id=1,
+            status=MachineReportStatus.BUSY,
+            timestamp=datetime.now(UTC) - timedelta(minutes=10),
+            time_remaining=30,
+        ),
+        Report(
+            machine_id=2,
+            status=MachineReportStatus.UNAVAILABLE,
+            timestamp=datetime.now(UTC),
+            time_remaining=None,
+        ),
+    ])
+    db_session.commit()
+
+    machines = {m.id: m for m in service.get_machines_with_reports()}
+
+    assert machines[1].status == MachineResponseStatus.BUSY
+    assert machines[2].status == MachineResponseStatus.UNAVAILABLE
+    assert machines[3].status == MachineResponseStatus.FREE
+    assert machines[4].status == MachineResponseStatus.FREE

@@ -43,7 +43,7 @@ class MachineService:
         self.db.flush()
         return report
 
-    def _get_machine_status(self, machine: Machine) -> MachineResponseStatus: 
+    def _get_machine_status(self, machine: Machine) -> MachineResponseStatus:
         """Determine the current status of a machine."""
 
         machine_reports = self.get_machine_reports(machine.id, limit=1)

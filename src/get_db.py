@@ -1,14 +1,16 @@
 from collections.abc import Generator
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
-from src.settings import database_settings
+
 from src.models import Base, Machine
 from src.schemas import MachineType
+from src.settings import database_settings
 
 engine = create_engine(
     database_settings.URL,
     connect_args={"check_same_thread": False},
-    echo=True
+    echo=True,
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

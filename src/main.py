@@ -1,9 +1,10 @@
-from fastapi import FastAPI
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+from fastapi import FastAPI
+
 import src.routers.machines
-from src.get_db import create_tables, create_initial_machines
+from src.get_db import create_initial_machines, create_tables
 
 
 @asynccontextmanager

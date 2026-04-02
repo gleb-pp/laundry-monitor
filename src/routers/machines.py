@@ -1,16 +1,19 @@
-from fastapi import APIRouter, Depends
-from schemas import (
-    Success,
-    MachineSchema,
-    MachineReportStatus,
-    ReportSchema,
-)
-from get_db import get_db
 from typing import Annotated
+
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from service import MachineService
+
+from src.get_db import get_db
+from src.schemas import (
+    MachineReportStatus,
+    MachineSchema,
+    ReportSchema,
+    Success,
+)
+from src.service import MachineService
 
 router = APIRouter()
+
 
 @router.post("/report")
 async def send_report(
@@ -25,21 +28,26 @@ async def send_report(
     db.commit()
     return Success()
 
+
 @router.get("/machines")
 async def get_machines(
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[Session, Depends(get_db)],
 ) -> list[MachineSchema]:
     """Get a list of all laundry machines."""
     service = MachineService(db)
     return service.get_machines_with_reports()
 
-@router.get("/machines/{id}/history")
+
+@router.get("/machines/{machine_id}/history")
 async def get_machine_history(
     db: Annotated[Session, Depends(get_db)],
-    id: int,
+    machine_id: int,
     limit: int = 10,
 ) -> list[ReportSchema]:
     """Get the history of a specific laundry machine."""
     service = MachineService(db)
-    reports = service.get_machine_reports(id, limit)
-    return [ReportSchema.model_validate(report) for report in reports]
+    reports = service.get_machine_reports(machine_id, limit)
+    return [
+        ReportSchema.model_validate(report, from_attributes=True)
+        for report in reports
+    ]

@@ -1,9 +1,11 @@
-from fastapi import FastAPI
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-import routers.machines
-from get_db import create_tables, create_initial_machines
+from fastapi import FastAPI
+
+import src.routers.machines
+from src.get_db import create_initial_machines, create_tables
+
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
@@ -19,4 +21,4 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.include_router(routers.machines.router)
+app.include_router(src.routers.machines.router)

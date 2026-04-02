@@ -1,15 +1,15 @@
 from datetime import UTC, datetime
 
 from sqlalchemy import (
-    Enum,
-    Integer,
     DateTime,
+    Enum,
     ForeignKey,
+    Integer,
 )
 from sqlalchemy.orm import Mapped, mapped_column
-from schemas.machines import MachineReportStatus
 
-from models.base import Base
+from src.models.base import Base
+from src.schemas.machines import MachineReportStatus
 
 
 class Report(Base):
@@ -17,14 +17,18 @@ class Report(Base):
 
     __tablename__ = "reports"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+    )
     machine_id: Mapped[int] = mapped_column(
-        ForeignKey("machines.id", ondelete="CASCADE"), nullable=False
+        ForeignKey("machines.id", ondelete="CASCADE"), nullable=False,
     )
     status: Mapped[MachineReportStatus] = mapped_column(
         Enum(MachineReportStatus, name="machine_report_status"),
         nullable=False,
-        default=MachineReportStatus.FREE
+        default=MachineReportStatus.FREE,
     )
     timestamp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

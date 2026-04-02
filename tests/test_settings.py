@@ -1,5 +1,5 @@
-from settings.db import DatabaseSettings
-from settings.dorm import DormSettings
+from src.settings.db import DatabaseSettings
+from src.settings.dorm import DormSettings
 
 
 def test_database_settings_reads_env(monkeypatch):

@@ -1,22 +1,22 @@
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, timedelta, timezone
 from unittest.mock import patch
 
 from hypothesis import assume, given, strategies as st
 
-from models import Machine, Report
-from schemas import MachineReportStatus, MachineResponseStatus
-from service.machine import MachineService
+from src.models import Machine, Report
+from src.schemas import MachineReportStatus, MachineResponseStatus
+from src.service.machine import MachineService
 
 
-NOW = datetime(2026, 4, 2, 12, 0, tzinfo=UTC)
+NOW = datetime.now(timezone.utc)
 
-
-class FixedDateTime(datetime):
+class FixedDateTime:
+    """Mock datetime to return fixed NOW."""
     @classmethod
     def now(cls, tz=None):
-        if tz is None:
-            return NOW.replace(tzinfo=None)
-        return NOW.astimezone(tz)
+        if tz is not None:
+            return NOW.astimezone(tz)
+        return NOW
 
 
 def make_machine() -> Machine:

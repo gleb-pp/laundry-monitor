@@ -1,13 +1,21 @@
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, timedelta, timezone
 from unittest.mock import patch
 from unittest.mock import Mock
 
-from models import Machine, Report
-from schemas import MachineReportStatus, MachineResponseStatus
+from src.models import Machine, Report
+from src.schemas import MachineReportStatus, MachineResponseStatus
 from service.machine import MachineService
 
 
-NOW = datetime(2026, 4, 2, 12, 0, tzinfo=UTC)
+NOW = datetime.now(timezone.utc)
+
+class FixedDateTime:
+    """Mock datetime to return fixed NOW."""
+    @classmethod
+    def now(cls, tz=None):
+        if tz is not None:
+            return NOW.astimezone(tz)
+        return NOW
 
 def test_get_machine_status_requests_only_one_report():
     service = MachineService(db=None)

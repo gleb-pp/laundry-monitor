@@ -1,6 +1,5 @@
 # Laundry Monitor
 
-[![CI](https://github.com/gleb-pp/laundry-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/<OWNER>/<REPO>/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](#)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](#)
 [![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite&logoColor=white)](#)
@@ -15,7 +14,7 @@ A simple web application where dormitory students can report and view the realâ€
 
 This project is part of the Software Quality and Reliability course at Innopolis University. The main focus is on implementing autonomous quality gates, testing and analysis techniques, and studying CI/CD practices.
 
--- 
+---
 
 ## Features
 
@@ -53,6 +52,30 @@ Status is inferred using report timestamp and optional `time_remaining`.
 
 ---
 
+## API
+
+### `POST /report`
+Submit a machine status report.
+
+**Parameters**
+- `machine_id: int`
+- `status: free | busy | unavailable`
+- `time_remaining: int | null`
+
+### `GET /machines`
+Return all machines with inferred current status.
+
+### `GET /machines/{id}/history`
+Return recent reports for a specific machine.
+
+### OpenAPI docs
+Swagger UI is available at:
+
+```bash
+http://127.0.0.1:8000/docs
+```
+
+---
 
 ## Getting started
 
@@ -63,13 +86,26 @@ git clone https://github.com/gleb-pp/laundry-monitor.git
 cd laundry-monitor
 ```
 
-### 2. Install dependencies
+### 2. Create and activate a virtual environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install poetry
+
+```bash
+pip install poetry
+```
+
+### 4. Install project dependencies
 
 ```bash
 poetry install
 ```
 
-### 3. Run the application
+### 5. Run the application
 
 ```bash
 poetry run uvicorn src.main:app --reload
@@ -80,3 +116,53 @@ Then open:
 ```bash
 http://127.0.0.1:8000/docs
 ```
+
+---
+
+## Seed Data
+
+On startup, the application creates database tables and preloads several machines if the database is empty.
+
+Default initial data:
+- Washer 1
+- Dryer 1
+- Washer 2
+- Dryer 2
+
+---
+
+## Testing
+
+Run all tests:
+
+```bash
+poetry run pytest -q
+```
+
+Run tests with coverage:
+
+```bash
+poetry run pytest --cov=src --cov-report=term-missing --cov-fail-under=70
+```
+
+---
+
+## Quality Gates
+
+Run style, complexity, security, and test checks from the project root:
+
+```bash
+poetry run flake8 src tests
+poetry run radon cc src -a -s
+poetry run radon mi src -s
+poetry run bandit -r src -lll
+poetry run pytest --cov=src --cov-report=term-missing --cov-fail-under=70
+```
+
+Target thresholds:
+
+- **Unit tests:** 100% passing
+- **Coverage:** at least 70%
+- **Cyclomatic complexity:** below threshold
+- **Style:** no flake8 errors
+- **Security:** no high-severity Bandit findings

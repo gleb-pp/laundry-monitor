@@ -3,7 +3,11 @@ from datetime import UTC, datetime, timedelta
 from sqlalchemy.orm import Session
 
 from src.models import Machine, Report
-from src.schemas import MachineReportStatus, MachineResponseStatus, MachineSchema
+from src.schemas import (
+    MachineReportStatus,
+    MachineResponseStatus,
+    MachineSchema,
+)
 from src.settings import machine_settings
 
 
@@ -60,12 +64,14 @@ class MachineService:
                 latest_report.timestamp.replace(tzinfo=UTC) +
                 timedelta(hours=machine_settings.HOURS_TO_FINISH)
             )
-            if (datetime.now(tz=UTC) < deadline):
+            if datetime.now(tz=UTC) < deadline:
                 return MachineResponseStatus.BUSY
             return MachineResponseStatus.PROBABLY_FREE
-        if (datetime.now(tz=UTC) <
-              latest_report.timestamp.replace(tzinfo=UTC) +
-              timedelta(minutes=latest_report.time_remaining)):
+        deadline = (
+            latest_report.timestamp.replace(tzinfo=UTC) +
+            timedelta(minutes=latest_report.time_remaining)
+        )
+        if datetime.now(tz=UTC) < deadline:
             return MachineResponseStatus.BUSY
         return MachineResponseStatus.FREE
 

@@ -20,7 +20,7 @@ jobs:
                 curl -sSL https://install.python-poetry.org | python3 -
             
             - name: Install dependencies
-              run: poetry install --with dev --no-root
+              run: poetry install --with dev
 
             - name: Dependency violation
               run: poetry check

@@ -1,14 +1,14 @@
 from datetime import UTC, datetime, timedelta
 
-from models.machines import Machine
-from models.reports import Report
-from schemas.machines import (
+from src.models.machines import Machine
+from src.models.reports import Report
+from src.schemas.machines import (
     MachineReportStatus,
     MachineResponseStatus,
     MachineSchema,
     MachineType,
 )
-from service.machine import MachineService
+from src.service.machine import MachineService
 
 
 def _machine_status(service: MachineService, machine_id: int):

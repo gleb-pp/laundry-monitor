@@ -13,8 +13,8 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-import get_db
-from main import app
+import src.get_db
+from src.main import app
 
 
 @pytest.fixture()
@@ -31,11 +31,11 @@ def test_engine(tmp_path, monkeypatch):
         bind=engine,
     )
 
-    monkeypatch.setattr(get_db, "engine", engine)
-    monkeypatch.setattr(get_db, "SessionLocal", testing_session_local)
+    monkeypatch.setattr(src.get_db, "engine", engine)
+    monkeypatch.setattr(src.get_db, "SessionLocal", testing_session_local)
 
-    get_db.create_tables()
-    get_db.create_initial_machines()
+    src.get_db.create_tables()
+    src.get_db.create_initial_machines()
 
     yield engine
 
@@ -44,7 +44,7 @@ def test_engine(tmp_path, monkeypatch):
 
 @pytest.fixture()
 def db_session(test_engine):
-    db = get_db.SessionLocal()
+    db = src.get_db.SessionLocal()
     try:
         yield db
     finally:

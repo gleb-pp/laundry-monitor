@@ -8,8 +8,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
-from models.base import Base
-from schemas.machines import MachineReportStatus
+from src.models.base import Base
+from src.schemas.machines import MachineReportStatus
 
 
 class Report(Base):

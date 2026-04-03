@@ -87,6 +87,8 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+.mutmut-cache
+mutants/
 
 # Translations
 *.mo

@@ -7,11 +7,11 @@ from hypothesis import strategies as st
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models.base import Base
-from models.machines import Machine
-from models.reports import Report
-from schemas import MachineReportStatus, MachineResponseStatus
-from service.machine import MachineService
+from src.models.base import Base
+from src.models.machines import Machine
+from src.models.reports import Report
+from src.schemas import MachineReportStatus, MachineResponseStatus
+from src.service.machine import MachineService
 
 
 NOW = datetime.now(UTC)

@@ -3,9 +3,9 @@ from collections.abc import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from models import Base, Machine
-from schemas import MachineType
-from settings import database_settings
+from src.models import Base, Machine
+from src.schemas import MachineType
+from src.settings import database_settings
 
 engine = create_engine(
     database_settings.URL,

@@ -3,9 +3,9 @@ from unittest.mock import patch
 
 import pytest
 
-from models import Machine, Report
-from schemas import MachineReportStatus, MachineResponseStatus
-from service.machine import MachineService
+from src.models import Machine, Report
+from src.schemas import MachineReportStatus, MachineResponseStatus
+from src.service.machine import MachineService
 
 
 NOW = datetime.now(UTC)

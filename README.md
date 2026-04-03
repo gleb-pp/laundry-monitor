@@ -29,10 +29,10 @@ This project is part of the Software Quality and Reliability course at Innopolis
 
 The system supports the following effective states:
 
-- `free`
-- `busy`
-- `probably_free`
-- `unavailable`
+- `free` — the machine was explicitly reported as available
+- `busy` — the machine was reported as currently in use
+- `probably_free` — the machine was previously reported as busy, but the expected busy period has likely ended and no newer report has confirmed the current state yet
+- `unavailable` — the machine is temporarily unavailable for use, for example due to maintenance or a malfunction
 
 Status is inferred using report timestamp and optional `time_remaining`.
 
@@ -57,16 +57,65 @@ Status is inferred using report timestamp and optional `time_remaining`.
 ### `POST /report`
 Submit a machine status report.
 
-**Parameters**
+**Request body**
 - `machine_id: int`
 - `status: free | busy | unavailable`
 - `time_remaining: int | null`
 
+**Example request**
+```json
+{
+  "machine_id": 1,
+  "status": "busy",
+  "time_remaining": 25
+}
+```
+
+**Example response**
+```json
+{
+  "success": true
+}
+```
+
 ### `GET /machines`
 Return all machines with inferred current status.
 
-### `GET /machines/{id}/history`
+**Example response**
+```json
+[
+  {
+    "id": 1,
+    "dormitory": 1,
+    "name": "Washer 1",
+    "type": "washing",
+    "status": "free"
+  },
+  {
+    "id": 2,
+    "dormitory": 1,
+    "name": "Dryer 1",
+    "type": "drying",
+    "status": "free"
+  }
+]
+```
+
+### `GET /machines/{machine_id}/history`
 Return recent reports for a specific machine.
+
+**Example response**
+```json
+[
+  {
+    "id": 1,
+    "machine_id": 2,
+    "status": "free",
+    "timestamp": "2026-04-03T16:19:29.062Z",
+    "time_remaining": 0
+  }
+]
+```
 
 ### OpenAPI docs
 Swagger UI is available at:
@@ -86,26 +135,19 @@ git clone https://github.com/gleb-pp/laundry-monitor.git
 cd laundry-monitor
 ```
 
-### 2. Create and activate a virtual environment
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3. Install poetry
+### 2. Install poetry
 
 ```bash
 pip install poetry
 ```
 
-### 4. Install project dependencies
+### 3. Install project dependencies
 
 ```bash
 poetry install
 ```
 
-### 5. Run the application
+### 4. Run the application
 
 ```bash
 poetry run uvicorn src.main:app --reload
@@ -123,11 +165,12 @@ http://127.0.0.1:8000/docs
 
 On startup, the application creates database tables and preloads several machines if the database is empty.
 
-Default initial data:
-- Washer 1
-- Dryer 1
-- Washer 2
-- Dryer 2
+| ID | Dormitory | Name      | Type    |
+|----|-----------|-----------|---------|
+| 1  | 1         | Washer 1  | Washing |
+| 2  | 1         | Dryer 1   | Drying  |
+| 3  | 2         | Washer 2  | Washing |
+| 4  | 2         | Dryer 2   | Drying  |
 
 ---
 
@@ -163,6 +206,6 @@ Target thresholds:
 
 - **Unit tests:** 100% passing
 - **Coverage:** at least 70%
-- **Cyclomatic complexity:** below threshold
+- **Cyclomatic complexity:** maximum McCabe complexity per function is 7
 - **Style:** no flake8 errors
 - **Security:** no high-severity Bandit findings

@@ -38,7 +38,6 @@ def test_get_machine_status_requests_only_one_report(
 ) -> None:
     """Check that _get_machine_status only considers the latest report."""
     service = MachineService(db_session)
-    # Добавляем два отчёта, но метод должен запросить только один
     db_session.add(Report(
         machine_id=machine.id,
         status=MachineReportStatus.BUSY,
@@ -96,7 +95,7 @@ def test_free_report_means_free(db_session: Session, machine: Machine) -> None:
     assert service._get_machine_status(machine) == MachineResponseStatus.FREE
 
 
-@patch("service.machine.datetime", FixedDateTime)
+@patch("src.service.machine.datetime", FixedDateTime)
 def test_busy_without_time_remaining_recent_is_busy(
     db_session: Session,
     machine: Machine,
@@ -114,7 +113,7 @@ def test_busy_without_time_remaining_recent_is_busy(
     assert service._get_machine_status(machine) == MachineResponseStatus.BUSY
 
 
-@patch("service.machine.datetime", FixedDateTime)
+@patch("src.service.machine.datetime", FixedDateTime)
 def test_busy_without_time_remaining_at_4_hours_is_probably_free(
     db_session: Session,
     machine: Machine,
@@ -135,7 +134,7 @@ def test_busy_without_time_remaining_at_4_hours_is_probably_free(
     )
 
 
-@patch("service.machine.datetime", FixedDateTime)
+@patch("src.service.machine.datetime", FixedDateTime)
 def test_busy_without_time_remaining_after_4_hours_is_probably_free(
     db_session: Session,
     machine: Machine,
@@ -156,7 +155,7 @@ def test_busy_without_time_remaining_after_4_hours_is_probably_free(
     )
 
 
-@patch("service.machine.datetime", FixedDateTime)
+@patch("src.service.machine.datetime", FixedDateTime)
 def test_busy_with_remaining_before_expiry_is_busy(
     db_session: Session,
     machine: Machine,
@@ -174,7 +173,7 @@ def test_busy_with_remaining_before_expiry_is_busy(
     assert service._get_machine_status(machine) == MachineResponseStatus.BUSY
 
 
-@patch("service.machine.datetime", FixedDateTime)
+@patch("src.service.machine.datetime", FixedDateTime)
 def test_busy_with_remaining_at_expiry_is_free(
     db_session: Session,
     machine: Machine,
@@ -192,7 +191,7 @@ def test_busy_with_remaining_at_expiry_is_free(
     assert service._get_machine_status(machine) == MachineResponseStatus.FREE
 
 
-@patch("service.machine.datetime", FixedDateTime)
+@patch("src.service.machine.datetime", FixedDateTime)
 def test_busy_with_remaining_after_expiry_is_free(
     db_session: Session,
     machine: Machine,

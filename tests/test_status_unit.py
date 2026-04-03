@@ -10,6 +10,7 @@ from src.service.machine import MachineService
 
 NOW = datetime.now(UTC)
 
+
 class FixedDateTime:
     """Mock datetime to return fixed NOW."""
 
@@ -35,7 +36,7 @@ def test_get_machine_status_requests_only_one_report(
     db_session: Session,
     machine: Machine,
 ) -> None:
-    """Check that _get_machine_status only considers the latest report for determining status."""
+    """Check that _get_machine_status only considers the latest report."""
     service = MachineService(db_session)
     # Добавляем два отчёта, но метод должен запросить только один
     db_session.add(Report(
@@ -51,10 +52,7 @@ def test_get_machine_status_requests_only_one_report(
         time_remaining=None,
     ))
     db_session.commit()
-
-    # Напрямую проверить количество запросов сложно, но можно проверить, что статус определён по последнему
     status = service._get_machine_status(machine)
-    # Последний отчёт - BUSY, значит статус должен быть BUSY (если время не истекло)
     assert status == MachineResponseStatus.BUSY
 
 
@@ -64,7 +62,10 @@ def test_no_reports_means_free(db_session: Session, machine: Machine) -> None:
     assert service._get_machine_status(machine) == MachineResponseStatus.FREE
 
 
-def test_unavailable_report_means_unavailable(db_session: Session, machine: Machine) -> None:
+def test_unavailable_report_means_unavailable(
+    db_session: Session,
+    machine: Machine,
+) -> None:
     """Check that an UNAVAILABLE report makes a machine UNAVAILABLE."""
     service = MachineService(db_session)
     report = Report(
@@ -75,7 +76,10 @@ def test_unavailable_report_means_unavailable(db_session: Session, machine: Mach
     )
     db_session.add(report)
     db_session.commit()
-    assert service._get_machine_status(machine) == MachineResponseStatus.UNAVAILABLE
+    assert (
+        service._get_machine_status(machine)
+        == MachineResponseStatus.UNAVAILABLE
+    )
 
 
 def test_free_report_means_free(db_session: Session, machine: Machine) -> None:
@@ -93,8 +97,11 @@ def test_free_report_means_free(db_session: Session, machine: Machine) -> None:
 
 
 @patch("service.machine.datetime", FixedDateTime)
-def test_busy_without_time_remaining_recent_is_busy(db_session: Session, machine: Machine) -> None:
-    """Check that a recent BUSY report without time_remaining is considered BUSY."""
+def test_busy_without_time_remaining_recent_is_busy(
+    db_session: Session,
+    machine: Machine,
+) -> None:
+    """Check that a recent BUSY report without time_remaining is BUSY."""
     service = MachineService(db_session)
     report = Report(
         machine_id=machine.id,
@@ -108,8 +115,11 @@ def test_busy_without_time_remaining_recent_is_busy(db_session: Session, machine
 
 
 @patch("service.machine.datetime", FixedDateTime)
-def test_busy_without_time_remaining_at_4_hours_is_probably_free(db_session: Session, machine: Machine) -> None:
-    """Check that a BUSY report without time_remaining after 4 hours is considered PROBABLY_FREE."""
+def test_busy_without_time_remaining_at_4_hours_is_probably_free(
+    db_session: Session,
+    machine: Machine,
+) -> None:
+    """Check that a BUSY report without time after 4 hours is PROBABLY_FREE."""
     service = MachineService(db_session)
     report = Report(
         machine_id=machine.id,
@@ -119,12 +129,18 @@ def test_busy_without_time_remaining_at_4_hours_is_probably_free(db_session: Ses
     )
     db_session.add(report)
     db_session.commit()
-    assert service._get_machine_status(machine) == MachineResponseStatus.PROBABLY_FREE
+    assert (
+        service._get_machine_status(machine) ==
+        MachineResponseStatus.PROBABLY_FREE
+    )
 
 
 @patch("service.machine.datetime", FixedDateTime)
-def test_busy_without_time_remaining_after_4_hours_is_probably_free(db_session: Session, machine: Machine) -> None:
-    """Check that a BUSY report without time_remaining after 4 hours is considered PROBABLY_FREE."""
+def test_busy_without_time_remaining_after_4_hours_is_probably_free(
+    db_session: Session,
+    machine: Machine,
+) -> None:
+    """Check that a BUSY report without time after 4 hours is PROBABLY_FREE."""
     service = MachineService(db_session)
     report = Report(
         machine_id=machine.id,
@@ -134,12 +150,18 @@ def test_busy_without_time_remaining_after_4_hours_is_probably_free(db_session: 
     )
     db_session.add(report)
     db_session.commit()
-    assert service._get_machine_status(machine) == MachineResponseStatus.PROBABLY_FREE
+    assert (
+        service._get_machine_status(machine) ==
+        MachineResponseStatus.PROBABLY_FREE
+    )
 
 
 @patch("service.machine.datetime", FixedDateTime)
-def test_busy_with_remaining_before_expiry_is_busy(db_session: Session, machine: Machine) -> None:
-    """Check that a BUSY report with time_remaining that has not yet expired is considered BUSY."""
+def test_busy_with_remaining_before_expiry_is_busy(
+    db_session: Session,
+    machine: Machine,
+) -> None:
+    """Check that a BUSY report with time that has not yet expired is BUSY."""
     service = MachineService(db_session)
     report = Report(
         machine_id=machine.id,
@@ -153,8 +175,11 @@ def test_busy_with_remaining_before_expiry_is_busy(db_session: Session, machine:
 
 
 @patch("service.machine.datetime", FixedDateTime)
-def test_busy_with_remaining_at_expiry_is_free(db_session: Session, machine: Machine) -> None:
-    """Check that a BUSY report with time_remaining that has expired is considered FREE."""
+def test_busy_with_remaining_at_expiry_is_free(
+    db_session: Session,
+    machine: Machine,
+) -> None:
+    """Check that a BUSY report with time that has expired is FREE."""
     service = MachineService(db_session)
     report = Report(
         machine_id=machine.id,
@@ -168,8 +193,11 @@ def test_busy_with_remaining_at_expiry_is_free(db_session: Session, machine: Mac
 
 
 @patch("service.machine.datetime", FixedDateTime)
-def test_busy_with_remaining_after_expiry_is_free(db_session: Session, machine: Machine) -> None:
-    """Check that a BUSY report with time_remaining that has expired is considered FREE."""
+def test_busy_with_remaining_after_expiry_is_free(
+    db_session: Session,
+    machine: Machine,
+) -> None:
+    """Check that a BUSY report with time that has expired is FREE."""
     service = MachineService(db_session)
     report = Report(
         machine_id=machine.id,

@@ -31,7 +31,10 @@ def test_post_report_returns_success(client: TestClient) -> None:
 
 
 def test_history_contains_posted_report(client: TestClient) -> None:
-    """Check that a report posted to POST /report appears in the GET /machines/{machine_id}/history endpoint."""
+    """
+    Check that a report posted to POST /report appears in the
+    GET /machines/{machine_id}/history endpoint.
+    """
     client.post(
         "/report",
         params={
@@ -52,7 +55,9 @@ def test_history_contains_posted_report(client: TestClient) -> None:
     assert body[0]["time_remaining"] == 25
 
 
-def test_machines_endpoint_reflects_unavailable_status(client: TestClient) -> None:
+def test_machines_endpoint_reflects_unavailable_status(
+    client: TestClient,
+) -> None:
     """Check that the machines endpoint reflects the unavailable status."""
     client.post(
         "/report",
@@ -70,9 +75,15 @@ def test_machines_endpoint_reflects_unavailable_status(client: TestClient) -> No
 
 
 def test_history_limit_parameter_works(client: TestClient) -> None:
-    """Check that the limit parameter of GET /machines/{machine_id}/history limits the number of returned reports."""
+    """
+    Check that the limit parameter of GET /machines/{machine_id}/history
+    limits the number of returned reports.
+    """
     client.post("/report", params={"machine_id": 1, "status": "free"})
-    client.post("/report", params={"machine_id": 1, "status": "busy", "time_remaining": 10})
+    client.post(
+        "/report",
+        params={"machine_id": 1, "status": "busy", "time_remaining": 10},
+    )
 
     response = client.get("/machines/1/history", params={"limit": 1})
 
@@ -80,8 +91,14 @@ def test_history_limit_parameter_works(client: TestClient) -> None:
     body = response.json()
     assert len(body) == 1
 
-def test_history_limit_parameter_returns_latest_report(client: TestClient) -> None:
-    """Check that the limit parameter of GET /machines/{machine_id}/history returns the latest report."""
+
+def test_history_limit_parameter_returns_latest_report(
+    client: TestClient,
+) -> None:
+    """
+    Check that the limit parameter of GET /machines/{machine_id}/history
+    returns the latest report.
+    """
     client.post("/report", params={"machine_id": 1, "status": "free"})
     client.post(
         "/report",

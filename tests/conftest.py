@@ -19,7 +19,10 @@ for p in (ROOT, SRC):
 
 
 @pytest.fixture
-def test_engine(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Generator[Engine, None, None]:
+def test_engine(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> Generator[Engine, None, None]:
     """Create a temporary SQLite database for testing."""
     db_path = tmp_path / "test.sqlite3"
     engine = create_engine(

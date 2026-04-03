@@ -12,7 +12,10 @@ def test_database_settings_reads_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_dorm_settings_reads_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Check that DormSettings reads the DORM_MIN_INDEX and DORM_MAX_INDEX environment variables."""
+    """
+    Check that DormSettings reads the DORM_MIN_INDEX
+    and DORM_MAX_INDEX environment variables.
+    """
     monkeypatch.setenv("DORM_MIN_INDEX", "2")
     monkeypatch.setenv("DORM_MAX_INDEX", "9")
     settings = DormSettings()

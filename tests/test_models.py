@@ -23,7 +23,7 @@ def test_machine_type_uses_machine_type_enum() -> None:
 
 
 def test_machine_has_dormitory_check_constraint() -> None:
-    """Check that the Machine model has the correct dormitory check constraint."""
+    """Check that the Machine model has the correct dormitory constraint."""
     constraints = [
         str(constraint.sqltext)
         for constraint in Machine.__table__.constraints
@@ -74,7 +74,7 @@ def test_report_timestamp_default_is_callable() -> None:
 
 
 def test_metadata_can_create_tables() -> None:
-    """Check that the metadata can create tables in an in-memory SQLite database."""
+    """Check that the metadata can create tables in an in-memory SQLite."""
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
 

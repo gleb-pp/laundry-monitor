@@ -44,4 +44,4 @@ jobs:
               run: poetry run pytest --cov=src --cov-report=term-missing --cov-fail-under=70
 
             - name: Run mutation testing
-              run: poetry run mutmut run --simple-output
+              run: poetry run mutmut run --no-progress

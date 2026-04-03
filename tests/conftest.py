@@ -10,14 +10,20 @@ from sqlalchemy.orm import Session, sessionmaker
 import src.get_db
 from src.main import app
 
-SRC = Path(__file__).resolve().parents[1]
-if str(SRC) not in sys.path:
-    sys.path.insert(0, str(SRC))
+ROOT = Path(__file__).resolve().parent.parent
+SRC = ROOT / "src"
+
+for p in (ROOT, SRC):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
 
 
 @pytest.fixture
-def test_engine(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Generator[Engine, None, None]:
-    """Create a temporary SQLite database."""
+def test_engine(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> Generator[Engine, None, None]:
+    """Create a temporary SQLite database for testing."""
     db_path = tmp_path / "test.sqlite3"
     engine = create_engine(
         f"sqlite:///{db_path}",
@@ -43,7 +49,7 @@ def test_engine(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Generator[En
 
 @pytest.fixture
 def db_session(test_engine: Engine) -> Generator[Session, None, None]:
-    """Provide a database session for tests."""
+    """Create a database session for testing."""
     db = src.get_db.SessionLocal()
     try:
         yield db

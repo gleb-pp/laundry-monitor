@@ -29,6 +29,6 @@ else:
     for idx, machine in enumerate(dryers):
         with cols[idx % 3]:
             render_machine_card(
-                machine=machine, 
+                machine=machine,
                 icon_url="images/sy1.png"
             )

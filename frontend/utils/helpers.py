@@ -8,6 +8,7 @@ def get_status_color(status: str) -> str:
     }
     return colors.get(status, "#95a5a6")
 
+
 def format_status(status: str) -> str:
     """Return human-readable status."""
     return status.replace("_", " ").title()

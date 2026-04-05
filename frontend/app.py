@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
+
 from utils.components import render_page_header, render_quote
 from config import settings
 
@@ -29,11 +30,9 @@ st.markdown("Select a category below to view availability or report a machine.")
 
 col1, col2 = st.columns(2)
 
-IMG_WASHER = str(settings.WASHER_IMAGE)
-IMG_DRYER = str(settings.DRYER_IMAGE)
 
 with col1, st.container(border=True):
-    st.image(IMG_WASHER, width=150)
+    st.image(str(settings.WASHER_IMAGE), width=150)
     st.subheader("Washing Machines")
     st.write("Check washer availability and submit status updates.")
     if st.button(
@@ -45,7 +44,7 @@ with col1, st.container(border=True):
         st.switch_page("pages/washers.py")
 
 with col2, st.container(border=True):
-    st.image(IMG_DRYER, width=138)
+    st.image(str(settings.DRYER_IMAGE), width=138)
     st.subheader("Dryers")
     st.write("Check dryer availability and submit status updates.")
     if st.button(

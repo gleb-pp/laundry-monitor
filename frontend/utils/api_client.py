@@ -1,20 +1,19 @@
-import os
+from typing import Any
 
 import requests
 import streamlit as st
+
 from config import settings
 
 
-API_BASE_URL = settings.API_BASE_URL
-
-TIMEOUT = 5
-
-
 @st.cache_data(ttl=30, show_spinner=False)
-def get_machines() -> list[dict[str]] | None:
+def get_machines() -> list[dict[str, Any]] | None:
     """Fetch the list of all machines from the backend API."""
     try:
-        resp = requests.get(f"{API_BASE_URL}/machines", timeout=TIMEOUT)
+        resp = requests.get(
+            f"{settings.API_BASE_URL}/machines",
+            timeout=settings.TIMEOUT,
+            )
         resp.raise_for_status()
         return resp.json()
     except Exception as e:
@@ -52,7 +51,11 @@ def submit_report(
         params["reporter_name"] = reporter
 
     try:
-        resp = requests.post(f"{API_BASE_URL}/report", params=params, timeout=TIMEOUT)
+        resp = requests.post(
+            f"{settings.API_BASE_URL}/report",
+            params=params,
+            timeout=settings.TIMEOUT,
+        )
         resp.raise_for_status()
         st.cache_data.clear()
         return True

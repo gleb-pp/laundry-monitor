@@ -1,7 +1,12 @@
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
+
 from utils.api_client import get_machines
-from utils.components import render_machine_card, render_page_header, render_quote
+from utils.components import (
+    render_machine_card,
+    render_page_header,
+    render_quote,
+)
 from config import settings
 
 st.set_page_config(page_title="Dryers", page_icon="💨", layout="wide")

@@ -1,11 +1,15 @@
 import streamlit as st
+
 from utils.api_client import get_random_quote, submit_report
 from utils.helpers import format_status, get_status_color
 
 
-def render_page_header(title: str, icon: str = "", show_back: bool = False) -> None:
+def render_page_header(
+    title: str,
+    icon: str = "",
+    show_back: bool = False,
+) -> None:
     """Render the top navigation with Title and a top-right Refresh button."""
-    # Используем 3 колонки: для кнопки назад, для заголовка, для кнопки обновления
     col_back, col_title, col_refresh = st.columns([1, 7, 2])
 
     with col_back:
@@ -16,8 +20,11 @@ def render_page_header(title: str, icon: str = "", show_back: bool = False) -> N
         st.title(f"{icon} {title}")
 
     with col_refresh:
-        # Кнопка Refresh всегда справа сверху
-        if st.button("Refresh", use_container_width=True, key=f"refresh_{title}"):
+        if st.button(
+            "Refresh",
+            use_container_width=True,
+            key=f"refresh_{title}",
+        ):
             st.cache_data.clear()
             st.rerun()
 
@@ -41,7 +48,7 @@ def render_machine_card(machine: dict, icon_url: str) -> None:
         with col_info:
             st.subheader(machine.get("name", "Unnamed"))
             st.caption(
-                f"Dorm: {machine.get('dormitory', '?')} | ID: {machine.get('id', '?')}",
+                f"Dorm: {machine.get('dormitory', '?')}| ID: {machine.get('id', '?')}",
             )
 
         status = machine.get("status", "unavailable")

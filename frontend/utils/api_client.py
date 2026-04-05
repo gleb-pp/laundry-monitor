@@ -1,4 +1,5 @@
 import os
+
 import requests
 import streamlit as st
 
@@ -8,7 +9,7 @@ TIMEOUT = 5
 
 @st.cache_data(ttl=30, show_spinner=False)
 def get_machines():
-    """Fetches the list of all machines from the backend API."""
+    """Fetch the list of all machines from the backend API."""
     try:
         resp = requests.get(f"{API_BASE_URL}/machines", timeout=TIMEOUT)
         resp.raise_for_status()
@@ -19,14 +20,14 @@ def get_machines():
 
 
 @st.cache_data(ttl=30, show_spinner=False)
-def get_random_quote():
-    """Fetches a random inspirational quote (Cached for 1 hour to prevent UI lag)."""
+def get_random_quote() -> str:
+    """Fetch a random inspirational quote (Cached for 1 hour to prevent UI lag)."""
     try:
         url = "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en"
         response = requests.get(url, timeout=3)
         data = response.json()
-        quote_text = data['quoteText']
-        quote_author = data['quoteAuthor']
+        quote_text = data["quoteText"]
+        quote_author = data["quoteAuthor"]
         if (quote_author):
             return f"“{quote_text}” — {quote_author}"
         return f"“{quote_text}”"
@@ -34,8 +35,13 @@ def get_random_quote():
         return "“The secret of getting ahead is getting started.” — Mark Twain"
 
 
-def submit_report(machine_id: int, status: str, time_remaining: int = None, reporter: str = None):
-    """Submits a new status report to the backend API."""
+def submit_report(
+    machine_id: int,
+    status: str,
+    time_remaining: int | None = None,
+    reporter: str | None = None,
+) -> bool:
+    """Submit a new status report to the backend API."""
     params = {"machine_id": machine_id, "status": status}
     if time_remaining is not None:
         params["time_remaining"] = time_remaining

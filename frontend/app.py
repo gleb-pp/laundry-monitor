@@ -13,7 +13,7 @@ st.markdown(
         .main > div { padding: 2rem 1rem; }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 # Шапка с заголовком и кнопкой обновления справа
@@ -30,18 +30,26 @@ col1, col2 = st.columns(2)
 IMG_WASHER = "images/st5.jpg"
 IMG_DRYER = "images/st7.png"
 
-with col1:
-    with st.container(border=True):
-        st.image(IMG_WASHER, width=150)
-        st.subheader("Washing Machines")
-        st.write("Check washer availability and submit status updates.")
-        if st.button("Browse Washers", key="goto_washers", type="primary", use_container_width=True):
-            st.switch_page("pages/washers.py")
+with col1, st.container(border=True):
+    st.image(IMG_WASHER, width=150)
+    st.subheader("Washing Machines")
+    st.write("Check washer availability and submit status updates.")
+    if st.button(
+        "Browse Washers",
+        key="goto_washers",
+        type="primary",
+        use_container_width=True,
+    ):
+        st.switch_page("pages/washers.py")
 
-with col2:
-    with st.container(border=True):
-        st.image(IMG_DRYER, width=138)
-        st.subheader("Dryers")
-        st.write("Check dryer availability and submit status updates.")
-        if st.button("Browse Dryers", key="goto_dryers", type="primary", use_container_width=True):
-            st.switch_page("pages/dryers.py")
+with col2, st.container(border=True):
+    st.image(IMG_DRYER, width=138)
+    st.subheader("Dryers")
+    st.write("Check dryer availability and submit status updates.")
+    if st.button(
+        "Browse Dryers",
+        key="goto_dryers",
+        type="primary",
+        use_container_width=True,
+    ):
+        st.switch_page("pages/dryers.py")

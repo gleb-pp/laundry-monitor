@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 from utils.api_client import get_machines
-from utils.components import render_page_header, render_quote, render_machine_card
+from utils.components import render_machine_card, render_page_header, render_quote
 
 st.set_page_config(page_title="Dryers", page_icon="💨", layout="wide")
 st_autorefresh(interval=30000, key="dryers_auto")
@@ -13,7 +13,7 @@ st.markdown(
         .stDeployButton { display: none; }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 render_page_header("Dryers", "💨", show_back=True)
@@ -30,5 +30,5 @@ else:
         with cols[idx % 3]:
             render_machine_card(
                 machine=machine,
-                icon_url="images/sy1.png"
+                icon_url="images/sy1.png",
             )

@@ -2,13 +2,16 @@ import os
 
 import requests
 import streamlit as st
+from config import settings
 
-API_BASE_URL = os.getenv("LAUNDRY_API_URL", "http://localhost:8000")
+
+API_BASE_URL = settings.API_BASE_URL
+
 TIMEOUT = 5
 
 
 @st.cache_data(ttl=30, show_spinner=False)
-def get_machines():
+def get_machines() -> list[dict[str]] | None:
     """Fetch the list of all machines from the backend API."""
     try:
         resp = requests.get(f"{API_BASE_URL}/machines", timeout=TIMEOUT)
@@ -16,12 +19,12 @@ def get_machines():
         return resp.json()
     except Exception as e:
         st.error(f"Failed to fetch machines: {e}")
-        return []
+        return None
 
 
 @st.cache_data(ttl=30, show_spinner=False)
 def get_random_quote() -> str:
-    """Fetch a random inspirational quote (Cached for 1 hour to prevent UI lag)."""
+    """Fetch a random inspirational quote (Cached for 30 sec to prevent UI lag)."""
     try:
         url = "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en"
         response = requests.get(url, timeout=3)

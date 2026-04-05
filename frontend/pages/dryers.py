@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 from utils.api_client import get_machines
 from utils.components import render_machine_card, render_page_header, render_quote
+from config import settings
 
 st.set_page_config(page_title="Dryers", page_icon="💨", layout="wide")
 st_autorefresh(interval=30000, key="dryers_auto")
@@ -30,5 +31,5 @@ else:
         with cols[idx % 3]:
             render_machine_card(
                 machine=machine,
-                icon_url="images/sy1.png",
+                icon_url=str(settings.DRYER_CARD_IMAGE),
             )

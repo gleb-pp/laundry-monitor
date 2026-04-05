@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 from utils.components import render_page_header, render_quote
+from config import settings
 
 st.set_page_config(page_title="Laundry Monitor", page_icon="🧺", layout="wide")
 st_autorefresh(interval=30000, key="main_auto")
@@ -16,10 +17,11 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Шапка с заголовком и кнопкой обновления справа
+
+# Header with title and refresh button
 render_page_header("Laundry Monitor", "🧺", show_back=False)
 
-# Цитата
+# Display inspirational quote
 render_quote()
 
 st.markdown("### Choose Machine Type")
@@ -27,8 +29,8 @@ st.markdown("Select a category below to view availability or report a machine.")
 
 col1, col2 = st.columns(2)
 
-IMG_WASHER = "images/st5.jpg"
-IMG_DRYER = "images/st7.png"
+IMG_WASHER = str(settings.WASHER_IMAGE)
+IMG_DRYER = str(settings.DRYER_IMAGE)
 
 with col1, st.container(border=True):
     st.image(IMG_WASHER, width=150)

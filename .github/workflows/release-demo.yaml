@@ -1,0 +1,33 @@
+name: Release & Demo Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'demo'
+        type: choice
+        options:
+        - demo
+        - production
+
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  verify-ci:
+    name: Ensure CI is Green
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: curl -sSL https://install.python-poetry.org | python3 -
+      - run: poetry install --with dev
+      
+      - name: Run Unit Tests
+        run: poetry run pytest

@@ -57,18 +57,14 @@ Status is inferred using report timestamp and optional `time_remaining`.
 ### `POST /report`
 Submit a machine status report.
 
-**Request body**
-- `machine_id: int`
-- `status: free | busy | unavailable`
-- `time_remaining: int | null`
+**Parameters**
+- `machine_id: int` — machine identifier
+- `status: free | busy | unavailable` — reported machine status
+- `time_remaining: int | null` — optional remaining time in minutes; use `null` when the machine is `free` or `unavailable`
 
 **Example request**
-```json
-{
-  "machine_id": 1,
-  "status": "busy",
-  "time_remaining": 25
-}
+```bash
+curl -X POST "http://127.0.0.1:8000/report?machine_id=1&status=busy&time_remaining=25"
 ```
 
 **Example response**
@@ -112,7 +108,7 @@ Return recent reports for a specific machine.
     "machine_id": 2,
     "status": "free",
     "timestamp": "2026-04-03T16:19:29.062Z",
-    "time_remaining": 0
+    "time_remaining": null
   }
 ]
 ```

@@ -68,3 +68,22 @@ def submit_report(
     except Exception as e:
         st.error(f"Report submission failed: {e}")
         return False
+
+
+@st.cache_data(ttl=10, show_spinner=False)
+def get_machine_history(
+    machine_id: int,
+    limit: int = 10,
+) -> list[dict[str, Any]] | None:
+    """Fetch the history of a specific machine."""
+    try:
+        resp = requests.get(
+            f"{settings.API_BASE_URL}/machines/{machine_id}/history",
+            params={"limit": limit},
+            timeout=settings.TIMEOUT,
+        )
+        resp.raise_for_status()
+        return resp.json()
+    except Exception as e:
+        st.error(f"Failed to fetch history for machine {machine_id}: {e}")
+        return None

@@ -1,6 +1,10 @@
 import streamlit as st
 
-from utils.api_client import get_random_quote, submit_report
+from utils.api_client import (
+    get_random_quote,
+    submit_report,
+    get_machine_history,
+)
 from utils.helpers import format_status, get_status_color
 
 
@@ -114,3 +118,55 @@ def render_machine_card(machine: dict, icon_url: str) -> None:
                 if success:
                     st.success("Report submitted successfully!")
                     st.rerun()
+
+
+def render_admin_machine_card(machine: dict, icon_url: str) -> None:
+    """Render a UI card for a laundry machine in the Admin Panel with history."""
+
+    with st.container(border=True):
+        col_img, col_info = st.columns([1, 3])
+
+        with col_img:
+            st.image(icon_url, width=100)
+
+        with col_info:
+            st.subheader(machine.get("name", "Unnamed"))
+            st.caption(f"Dorm: {machine.get('dormitory', '?')} | Type: {machine.get('type', '?').title()}")
+
+        status = machine.get("status", "unavailable")
+        color = get_status_color(status)
+        status_text = format_status(status)
+
+        st.markdown(
+            f"<div style='display: flex; align-items: center; margin-bottom: 15px;'>"
+            f"<span style='display:inline-block; width:12px; height:12px; background-color:{color}; border-radius:50%; margin-right: 8px;'></span>"
+            f"<strong>Status:</strong>&nbsp;{status_text}</div>",
+            unsafe_allow_html=True
+        )
+
+        with st.popover("📜 View History", use_container_width=True):
+            st.write(f"**Recent reports for {machine.get('name')}**")
+
+            history = get_machine_history(machine["id"])
+
+            if not history:
+                st.info("No history found for this machine.")
+            else:
+                formatted_history = []
+                for rep in history:
+                    raw_time = rep.get("timestamp", "")
+                    clean_time = raw_time.replace("T", " ")[:19] if raw_time else "Unknown"
+
+                    time_rem = rep.get("time_remaining")
+
+                    formatted_history.append({
+                        "Status": format_status(rep.get("status", "")),
+                        "Time": clean_time,
+                        "Rem. (min)": time_rem if time_rem is not None else "-"
+                    })
+
+                st.dataframe(
+                    formatted_history,
+                    hide_index=True,
+                    use_container_width=True,
+                )

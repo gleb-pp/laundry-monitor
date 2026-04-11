@@ -14,8 +14,6 @@ A simple web application where dormitory students can report and view the real�
 
 This project is part of the Software Quality and Reliability course at Innopolis University. The main focus is on implementing autonomous quality gates, testing and analysis techniques, and studying CI/CD practices.
 
----
-
 ## Features
 
 - report machine status via API
@@ -31,12 +29,10 @@ The system supports the following effective states:
 
 - `free` — the machine was explicitly reported as available
 - `busy` — the machine was reported as currently in use
-- `probably_free` — the machine was previously reported as busy, but the expected busy period has likely ended and no newer report has confirmed the current state yet
-- `unavailable` — the machine is temporarily unavailable for use, for example due to maintenance or a malfunction
+- `probably_free` — the machine was previously reported as busy, but the expected busy period has likely ended, and no newer report has confirmed the current state yet
+- `unavailable` — the machine is temporarily unavailable for use (e.g. due to maintenance or a malfunction)
 
 Status is inferred using report timestamp and optional `time_remaining`.
-
----
 
 ## Tech Stack
 
@@ -50,9 +46,7 @@ Status is inferred using report timestamp and optional `time_remaining`.
 - **Code quality:** flake8, radon, bandit
 - **CI/CD:** GitHub Actions
 
----
-
-## API
+## API Endpoints
 
 ### `POST /report`
 Submit a machine status report.
@@ -120,42 +114,19 @@ Swagger UI is available at:
 http://127.0.0.1:8000/docs
 ```
 
----
-
 ## Getting started
 
-### 1. Clone the repository
+You can run the application locally with Docker Compose.
 
 ```bash
 git clone https://github.com/gleb-pp/laundry-monitor.git
 cd laundry-monitor
+docker-compose up --build
 ```
 
-### 2. Install poetry
-
-```bash
-pip install poetry
-```
-
-### 3. Install project dependencies
-
-```bash
-poetry install
-```
-
-### 4. Run the application
-
-```bash
-poetry run uvicorn src.main:app --reload
-```
-
-Then open:
-
-```bash
-http://127.0.0.1:8000/docs
-```
-
----
+Now you can access:
+- UI at `http://localhost:8501`
+- API docs at `http://0.0.0.0:8000/docs` 
 
 ## Seed Data
 
@@ -167,8 +138,6 @@ On startup, the application creates database tables and preloads several machine
 | 2  | 1         | Dryer 1   | Drying  |
 | 3  | 2         | Washer 2  | Washing |
 | 4  | 2         | Dryer 2   | Drying  |
-
----
 
 ## Testing
 
@@ -183,8 +152,6 @@ Run tests with coverage:
 ```bash
 poetry run pytest --cov=src --cov-report=term-missing --cov-fail-under=70
 ```
-
----
 
 ## Quality Gates
 
